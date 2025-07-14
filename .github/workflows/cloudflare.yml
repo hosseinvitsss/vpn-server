@@ -1,0 +1,20 @@
+name: Free VPN via Cloudflare Tunnel
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: نصب ابزارها
+        run: |
+          sudo apt update -y
+          sudo apt install -y wget curl openssh-server
+          sudo systemctl enable ssh
+          sudo systemctl start ssh
+          echo "root:123456" | sudo chpasswd
+          
+          wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O cloudflared
+          chmod +x cloudflared
+          ./cloudflared tunnel --url ssh://localhost:22
